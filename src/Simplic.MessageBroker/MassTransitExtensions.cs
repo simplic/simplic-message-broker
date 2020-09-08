@@ -21,18 +21,5 @@ namespace Simplic.MessageBroker
             });
         }
 
-
-
-
-        //Insert into ESS_MS_Intern_Config(PlugInName, UserName, ConfigName, ConfigValue, Description, ContentType, IsEditable, UserCanOverwrite)
-        //    Values('RabbitMQ', '', 'Host', 'rabbitmq://localhost/', 'Gibt die Hostadresse des RabbitMQ servers an', 0, 1, 0 );
-
-
-        //Insert into ESS_MS_Intern_Config(PlugInName, UserName, ConfigName, ConfigValue, Description, ContentType, IsEditable, UserCanOverwrite)
-        //    Values('RabbitMQ', '', 'UserName', 'guest', 'Gibt den RabbitMQ Benutzernamen an', 0, 1, 0 );
-
-
-        //Insert into ESS_MS_Intern_Config(PlugInName, UserName, ConfigName, ConfigValue, Description, ContentType, IsEditable, UserCanOverwrite)
-        //    Values('RabbitMQ', '', 'Password', 'guest', 'Gibt das RabbitMQ Passwort an', 0, 1, 0 );
     }
 }
