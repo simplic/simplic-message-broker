@@ -23,8 +23,8 @@ namespace Simplic.MessageBroker
             });
 
 
-            container.RegisterInstance<IBusControl>(bus, new ContainerControlledLifetimeManager());
-            container.RegisterInstance<IBus>(bus, new ContainerControlledLifetimeManager());
+            container.RegisterInstance<IBusControl>(bus);
+            container.RegisterInstance<IBus>(bus);
 
 
             bus.Start();
