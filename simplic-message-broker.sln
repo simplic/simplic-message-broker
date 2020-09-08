@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker", "Simplic.MessageBroker\Simplic.MessageBroker.csproj", "{E2DD675D-EB73-47BE-A7E8-3C07A2157656}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker.Service", "Simplic.MessageBroker.Service\Simplic.MessageBroker.Service.csproj", "{AA606ADE-49B4-4E5B-8486-4031A92BC317}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2DD675D-EB73-47BE-A7E8-3C07A2157656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2DD675D-EB73-47BE-A7E8-3C07A2157656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2DD675D-EB73-47BE-A7E8-3C07A2157656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2DD675D-EB73-47BE-A7E8-3C07A2157656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7A78AC2-7529-4F48-B79C-885060054898}
+	EndGlobalSection
+EndGlobal
