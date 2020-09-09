@@ -7,7 +7,7 @@ namespace Simplic.MessageBroker
     /// <summary>
     /// Service to publish mass transit messages
     /// </summary>
-    public class PublishService : IMessageBus
+    public class MessageBus : IMessageBus
     {
         private readonly IBusControl bus;
 
@@ -15,7 +15,7 @@ namespace Simplic.MessageBroker
         /// Initializes a new instance of PublishService
         /// </summary>
         /// <param name="busControl"></param>
-        public PublishService(IBusControl busControl)
+        public MessageBus(IBusControl busControl)
         {
             bus = busControl;
         }
