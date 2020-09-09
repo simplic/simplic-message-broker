@@ -1,5 +1,8 @@
-﻿using MassTransit;
+﻿using GreenPipes;
+using MassTransit;
 using Simplic.Configuration;
+using Simplic.Session;
+using System.Linq;
 using Unity;
 using Unity.Lifetime;
 
@@ -15,11 +18,26 @@ namespace Simplic.MessageBroker
         /// <returns></returns>
         public static IUnityContainer InitializeMassTransitForClient(
             this IUnityContainer container,
-            IConfigurationService configurationService)
+            IConfigurationService configurationService,
+            ISessionService sessionService)
         {
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 cfg.InitializeHost(configurationService);
+
+                var session = sessionService.CurrentSession;
+
+                cfg.ConfigurePublish(publishPipeConfigurator => publishPipeConfigurator.UseExecute(ctx =>
+                {
+                    ctx.Headers.Set("UserId", session.UserId);
+                    ctx.Headers.Set("TenantId", string.Join(",", session.Organizations.Where(x => x.IsActive)));
+                }));
+
+                cfg.ConfigureSend(ISendPipeConfigurator => ISendPipeConfigurator.UseExecute(ctx =>
+                {
+                    ctx.Headers.Set("UserId", session.UserId);
+                    ctx.Headers.Set("TenantId", string.Join(",", session.Organizations.Where(x => x.IsActive)));
+                }));
             });
 
 
