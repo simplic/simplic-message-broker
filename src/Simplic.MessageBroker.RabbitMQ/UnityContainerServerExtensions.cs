@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Unity;
 
-namespace Simplic.MessageBroker
+namespace Simplic.MessageBroker.RabbitMQ
 {
+    /// <summary>
+    /// Extensions for a client server unity container
+    /// </summary>
     public static class UnityContainerServerExtensions
     {
         /// <summary>
@@ -85,7 +86,7 @@ namespace Simplic.MessageBroker
         }
 
         /// <summary>
-        /// get only loadable types
+        /// Get only loadable types
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns></returns>
@@ -101,6 +102,5 @@ namespace Simplic.MessageBroker
                 return e.Types.Where(t => t != null);
             }
         }
-
     }
 }

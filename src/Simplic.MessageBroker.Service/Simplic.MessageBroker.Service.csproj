@@ -51,15 +51,15 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ">
+      <Version>6.3.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Simplic.MessageBroker\Simplic.MessageBroker.csproj">
       <Project>{e2dd675d-eb73-47be-a7e8-3c07a2157656}</Project>
       <Name>Simplic.MessageBroker</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MassTransit.RabbitMQ">
-      <Version>6.3.2</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,10 +4,12 @@ using Simplic.Configuration;
 using Simplic.Session;
 using System.Linq;
 using Unity;
-using Unity.Lifetime;
 
-namespace Simplic.MessageBroker
+namespace Simplic.MessageBroker.RabbitMQ
 {
+    /// <summary>
+    /// Extensions for a client based unity container
+    /// </summary>
     public static class UnityContainerClientExtensions
     {
         /// <summary>
@@ -40,14 +42,11 @@ namespace Simplic.MessageBroker
                 }));
             });
 
-
             container.RegisterInstance<IBusControl>(bus);
             container.RegisterInstance<IBus>(bus);
-
 
             bus.Start();
             return container;
         }
-
     }
 }
