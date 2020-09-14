@@ -1,9 +1,14 @@
-﻿using MassTransit;
+﻿using GreenPipes;
+using MassTransit;
+using MassTransit.Testing;
 using Simplic.Configuration;
+using Simplic.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Unity;
 
 namespace Simplic.MessageBroker.RabbitMQ
@@ -18,7 +23,8 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <returns></returns>
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
-            IConfigurationService configurationService
+            IConfigurationService configurationService,
+            ISessionService sessionService
         )
         {
             var consumerTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetLoadableTypes())
@@ -55,6 +61,20 @@ namespace Simplic.MessageBroker.RabbitMQ
                     foreach (var consumer in consumers)
                         cfg.ReceiveEndpoint(consumer.Key, ec => ec.Consumer(consumer.Value, x => { return container.Resolve(x); }));
                 }
+
+                var session = sessionService.CurrentSession;
+
+                cfg.ConfigurePublish(publishPipeConfigurator => publishPipeConfigurator.UseExecute(ctx =>
+                {
+                    ctx.Headers.Set("UserId", session.UserId);
+                    ctx.Headers.Set("TenantId", string.Join(",", session.Organizations.Where(x => x.IsActive)));
+                }));
+
+                cfg.ConfigureSend(ISendPipeConfigurator => ISendPipeConfigurator.UseExecute(ctx =>
+                {
+                    ctx.Headers.Set("UserId", session.UserId);
+                    ctx.Headers.Set("TenantId", string.Join(",", session.Organizations.Where(x => x.IsActive)));
+                }));
             });
 
             container.RegisterInstance<IBusControl>(bus);
