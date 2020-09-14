@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker", "Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker.Service", "Simplic.MessageBroker.Service\Simplic.MessageBroker.Service.csproj", "{AA606ADE-49B4-4E5B-8486-4031A92BC317}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker.RabbitMQ", "Simplic.MessageBroker.RabbitMQ\Simplic.MessageBroker.RabbitMQ.csproj", "{A30B9A49-D390-4931-B790-37F88D0B9905}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA606ADE-49B4-4E5B-8486-4031A92BC317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A30B9A49-D390-4931-B790-37F88D0B9905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A30B9A49-D390-4931-B790-37F88D0B9905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A30B9A49-D390-4931-B790-37F88D0B9905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A30B9A49-D390-4931-B790-37F88D0B9905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

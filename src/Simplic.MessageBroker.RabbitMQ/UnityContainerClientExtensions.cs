@@ -3,7 +3,7 @@ using Simplic.Configuration;
 using Unity;
 using Unity.Lifetime;
 
-namespace Simplic.MessageBroker
+namespace Simplic.MessageBroker.RabbitMQ
 {
     public static class UnityContainerClientExtensions
     {

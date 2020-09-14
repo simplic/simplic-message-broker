@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Simplic.MessageBroker
+namespace Simplic.MessageBroker.RabbitMQ
 {
     public static class MassTransitExtensions
     {

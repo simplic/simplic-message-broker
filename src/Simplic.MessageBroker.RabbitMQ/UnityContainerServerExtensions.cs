@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Unity;
 
-namespace Simplic.MessageBroker
+namespace Simplic.MessageBroker.RabbitMQ
 {
     public static class UnityContainerServerExtensions
     {
