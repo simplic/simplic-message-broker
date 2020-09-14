@@ -1,13 +1,12 @@
-﻿using MassTransit.RabbitMqTransport;
+﻿using MassTransit;
+using MassTransit.RabbitMqTransport;
 using Simplic.Configuration;
-using MassTransit;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Simplic.MessageBroker.RabbitMQ
 {
+    /// <summary>
+    /// Extenstions for MassTransit objects
+    /// </summary>
     public static class MassTransitExtensions
     {
         /// <summary>
@@ -25,6 +24,5 @@ namespace Simplic.MessageBroker.RabbitMQ
                 host.Password(configurationService.GetValue<string>("Password", "RabbitMQ", ""));
             });
         }
-
     }
 }
