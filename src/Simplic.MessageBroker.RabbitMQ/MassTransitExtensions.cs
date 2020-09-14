@@ -10,6 +10,11 @@ namespace Simplic.MessageBroker.RabbitMQ
 {
     public static class MassTransitExtensions
     {
+        /// <summary>
+        /// Initializes the RabbitMQ host for a MassTransitBus
+        /// </summary>
+        /// <param name="rabbitMQConfigurator"></param>
+        /// <param name="configurationService"></param>
         public static void InitializeHost(
             this IRabbitMqBusFactoryConfigurator rabbitMQConfigurator,
             IConfigurationService configurationService)
