@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker.Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.MessageBroker.RabbitMQ", "Simplic.MessageBroker.RabbitMQ\Simplic.MessageBroker.RabbitMQ.csproj", "{A30B9A49-D390-4931-B790-37F88D0B9905}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ENV", "ENV", "{A667E5BB-B01F-48F6-9F81-89342504A9E0}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\README.md = ..\README.md
+		..\release-notes.xml = ..\release-notes.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

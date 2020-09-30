@@ -46,7 +46,9 @@ namespace Simplic.MessageBroker.RabbitMQ
             container.RegisterInstance<IBusControl>(bus);
             container.RegisterInstance<IBus>(bus);
 
-            bus.Start(TimeSpan.FromSeconds(1));
+            var timeout = configurationService.GetValue<int>("ConnectionTimeout", "RabbitMQ", "");
+
+            bus.Start(TimeSpan.FromSeconds(timeout));
 
             return container;
         }
