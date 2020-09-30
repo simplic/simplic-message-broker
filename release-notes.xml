@@ -1,5 +1,5 @@
 <ReleaseNotes>
-  <ChangeSet guid="d2d6435f-47ad-4f81-93e8-3c6647387754">
+  <ChangeSet guid="d2d6435f-47ad-4f81-93e8-3c6647387754" version="7.8.20.920" date="2020-09-30">
     <Change type="enhancement">Add a timeout while trying to connect to the RabbitMQ server and throws an exception when no connection can be established.</Change>    
   </ChangeSet>
 </ReleaseNotes>
