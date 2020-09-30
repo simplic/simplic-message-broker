@@ -22,7 +22,6 @@ namespace Simplic.MessageBroker.RabbitMQ
             {
                 host.Username(configurationService.GetValue<string>("UserName", "RabbitMQ", ""));
                 host.Password(configurationService.GetValue<string>("Password", "RabbitMQ", ""));
-                host.RequestedConnectionTimeout(1000);
             });
         }
     }
