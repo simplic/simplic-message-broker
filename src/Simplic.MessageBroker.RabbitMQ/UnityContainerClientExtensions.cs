@@ -2,6 +2,7 @@
 using MassTransit;
 using Simplic.Configuration;
 using Simplic.Session;
+using System;
 using System.Linq;
 using Unity;
 
@@ -45,7 +46,10 @@ namespace Simplic.MessageBroker.RabbitMQ
             container.RegisterInstance<IBusControl>(bus);
             container.RegisterInstance<IBus>(bus);
 
-            bus.Start();
+            var timeout = configurationService.GetValue<int>("ConnectionTimeout", "RabbitMQ", "");
+
+            bus.Start(TimeSpan.FromSeconds(timeout));
+
             return container;
         }
     }

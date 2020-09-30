@@ -1,0 +1,5 @@
+<ReleaseNotes>
+  <ChangeSet>
+    <Change type="enhancement">Add a timeout while trying to connect to the RabbitMQ server and throws an exception when no connection can be established.</Change>    
+  </ChangeSet>
+</ReleaseNotes>

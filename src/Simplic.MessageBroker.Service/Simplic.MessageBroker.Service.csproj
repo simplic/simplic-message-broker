@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ">
-      <Version>6.3.2</Version>
+      <Version>7.0.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
