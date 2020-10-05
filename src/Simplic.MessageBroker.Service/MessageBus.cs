@@ -24,6 +24,7 @@ namespace Simplic.MessageBroker
         {
             bus = busControl;
             this.redisService = redisService;
+            this.sessionService = sessionService;
         }
 
         /// <summary>
