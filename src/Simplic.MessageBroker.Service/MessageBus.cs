@@ -1,4 +1,7 @@
 ﻿using MassTransit;
+using Newtonsoft.Json;
+using Simplic.Redis;
+using Simplic.Session;
 using System;
 using System.Threading;
 
@@ -10,14 +13,17 @@ namespace Simplic.MessageBroker
     public class MessageBus : IMessageBus
     {
         private readonly IBusControl bus;
+        private readonly IRedisService redisService;
+        private readonly ISessionService sessionService;
 
         /// <summary>
         /// Initializes a new instance of PublishService
         /// </summary>
         /// <param name="busControl"></param>
-        public MessageBus(IBusControl busControl)
+        public MessageBus(IBusControl busControl, IRedisService redisService, ISessionService sessionService)
         {
             bus = busControl;
+            this.redisService = redisService;
         }
 
         /// <summary>
@@ -26,8 +32,9 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
+        public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
+            message = PublishInRedisChannel<T>(message);
             bus.Publish<T>(message, cancellationToken);
         }
 
@@ -36,8 +43,9 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Publish(object message, CancellationToken cancellationToken = default)
+        public void Publish(ICommandBase message, CancellationToken cancellationToken = default)
         {
+            message = PublishInRedisChannel(message);
             bus.Publish(message, cancellationToken);
         }
 
@@ -47,8 +55,9 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message</param>
         /// <param name="messageType">the message type</param>
         /// <param name="cancellationToken"></param>
-        public void Publish(object message, Type messageType, CancellationToken cancellationToken = default)
+        public void Publish(ICommandBase message, Type messageType, CancellationToken cancellationToken = default)
         {
+            message = PublishInRedisChannel(message);
             bus.Publish(message, messageType, cancellationToken);
         }
 
@@ -58,9 +67,11 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">the message type</typeparam>
         /// <param name="values"></param>
         /// <param name="cancellationToken"></param>
-        public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class
+        public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
-            bus.Publish<T>(values, cancellationToken);
+            var message = values as T;
+            message = PublishInRedisChannel<T>(message);
+            bus.Publish<T>(message, cancellationToken);
         }
 
         /// <summary>
@@ -69,8 +80,9 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class
+        public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
+            message = PublishInRedisChannel(message);
             bus.Send<T>(message, cancellationToken);
         }
 
@@ -79,7 +91,7 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="message">the message</param>
         /// <param name="cancellationToken"></param>
-        public void Send(object message, CancellationToken cancellationToken = default)
+        public void Send(ICommandBase message, CancellationToken cancellationToken = default)
         {
             bus.Send(message, cancellationToken);
         }
@@ -90,8 +102,9 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message</param>
         /// <param name="messageType">The message type</param>
         /// <param name="cancellationToken"></param>
-        public void Send(object message, Type messageType, CancellationToken cancellationToken = default)
+        public void Send(ICommandBase message, Type messageType, CancellationToken cancellationToken = default)
         {
+            message = PublishInRedisChannel(message);
             bus.Send(message, messageType);
         }
 
@@ -101,9 +114,25 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="values">The property values to initialize on the interface</param>
         /// <param name="cancellationToken"></param>
-        public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class
+        public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
-            bus.Send<T>(values, cancellationToken);
+            var message = values as T;
+            message = PublishInRedisChannel(message);
+            bus.Send<T>(message, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes a message to a redis channel
+        /// </summary>
+        /// <param name="commandBase"></param>
+        private T PublishInRedisChannel<T>(T commandBase) where T : ICommandBase
+        {
+            commandBase.UserId = sessionService.CurrentSession.UserId;
+            commandBase.MessageId = Guid.NewGuid();
+
+            redisService.Publish(MessageBrokerRedisChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }), StackExchange.Redis.CommandFlags.FireAndForget);
+
+            return commandBase;
         }
     }
 }

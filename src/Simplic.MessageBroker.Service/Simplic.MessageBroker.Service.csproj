@@ -54,6 +54,12 @@
     <PackageReference Include="MassTransit.RabbitMQ">
       <Version>7.0.4</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.Redis">
+      <Version>1.0.20.1005</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Session">
+      <Version>6.4.20.322</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Simplic.MessageBroker\Simplic.MessageBroker.csproj">
