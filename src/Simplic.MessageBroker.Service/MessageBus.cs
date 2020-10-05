@@ -93,6 +93,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send(ICommandBase message, CancellationToken cancellationToken = default)
         {
+            message = PublishInRedisChannel(message);
             bus.Send(message, cancellationToken);
         }
 
