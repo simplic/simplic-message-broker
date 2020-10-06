@@ -132,7 +132,7 @@ namespace Simplic.MessageBroker
             commandBase.UserId = sessionService.CurrentSession.UserId;
             commandBase.MessageId = Guid.NewGuid();
 
-            redisService.Publish(MessageBrokerRedisChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }), StackExchange.Redis.CommandFlags.FireAndForget);
+            //redisService.Publish(MessageBrokerRedisChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }), StackExchange.Redis.CommandFlags.FireAndForget);
 
             return commandBase;
         }
