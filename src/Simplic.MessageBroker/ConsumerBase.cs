@@ -28,10 +28,16 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="context">The consumer context of the given message type</param>
         /// <returns></returns>
-        public async Task Consume(ConsumeContext<T> context)
+        public virtual async Task Consume(ConsumeContext<T> context)
         {
-            await Execute(context.Message);
-
+            try
+            {
+                await Execute(context);
+            }
+            catch
+            {
+                Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}");
+            }
             redisService.Publish(MessageBrokerRedisChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = context.Message.UserId }), CommandFlags.FireAndForget);
         }
 
@@ -40,6 +46,6 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="message">The message of the consumed context</param>
         /// <returns></returns>
-        public abstract Task Execute(T message);
+        public abstract Task Execute(ConsumeContext<T> message);
     }
 }

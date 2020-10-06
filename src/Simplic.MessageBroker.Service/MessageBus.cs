@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using Newtonsoft.Json;
 using Simplic.Redis;
 using Simplic.Session;
@@ -70,9 +71,18 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
-            var message = values as T;
-            message = PublishInRedisChannel<T>(message);
-            bus.Publish<T>(message, cancellationToken);
+            try
+            {
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<object, T>());
+                var mapper = new Mapper(config);
+                var message = mapper.Map<T>(values);
+                message = PublishInRedisChannel<T>(message);
+                bus.Publish<T>(message, cancellationToken);
+            }
+            catch
+            {
+                bus.Publish<T>(values, cancellationToken);
+            }
         }
 
         /// <summary>
@@ -118,9 +128,18 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
         {
-            var message = values as T;
-            message = PublishInRedisChannel(message);
-            bus.Send<T>(message, cancellationToken);
+            try
+            {
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<object, T>());
+                var mapper = new Mapper(config);
+                var message = mapper.Map<T>(values);
+                message = PublishInRedisChannel(message);
+                bus.Send<T>(message, cancellationToken);
+            }
+            catch
+            {
+                bus.Send<T>(values, cancellationToken);
+            }
         }
 
         /// <summary>
@@ -129,10 +148,17 @@ namespace Simplic.MessageBroker
         /// <param name="commandBase"></param>
         private T PublishInRedisChannel<T>(T commandBase) where T : ICommandBase
         {
-            commandBase.UserId = sessionService.CurrentSession.UserId;
-            commandBase.MessageId = Guid.NewGuid();
+            try
+            {
+                commandBase.UserId = sessionService.CurrentSession.UserId;
+                commandBase.MessageId = Guid.NewGuid();
 
-            //redisService.Publish(MessageBrokerRedisChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }), StackExchange.Redis.CommandFlags.FireAndForget);
+                redisService.Publish(MessageBrokerRedisChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }), StackExchange.Redis.CommandFlags.FireAndForget);
+            }
+            catch (Exception ex)
+            {
+                Log.LogManagerInstance.Instance.Error("Error while publishing to redis db", ex);
+            };
 
             return commandBase;
         }

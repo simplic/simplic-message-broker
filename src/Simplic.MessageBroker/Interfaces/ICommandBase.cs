@@ -7,8 +7,14 @@ namespace Simplic.MessageBroker
     /// </summary>
     public interface ICommandBase
     {
+        /// <summary>
+        /// Gets or sets the message id
+        /// </summary>
         Guid MessageId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user id
+        /// </summary>
         int UserId { get; set; }
     }
 }

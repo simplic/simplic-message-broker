@@ -37,6 +37,9 @@
     <Reference Include="Pipelines.Sockets.Unofficial, Version=1.0.0.0, Culture=neutral, PublicKeyToken=42ea0a778e13fbe2, processorArchitecture=MSIL">
       <HintPath>..\packages\Pipelines.Sockets.Unofficial.2.1.16\lib\net472\Pipelines.Sockets.Unofficial.dll</HintPath>
     </Reference>
+    <Reference Include="Simplic.Log, Version=7.2.220.329, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Simplic.Log.7.2.220.329\lib\net48\Simplic.Log.dll</HintPath>
+    </Reference>
     <Reference Include="Simplic.Redis, Version=1.0.20.1005, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Simplic.Redis.1.0.20.1005\lib\net48\Simplic.Redis.dll</HintPath>
     </Reference>
