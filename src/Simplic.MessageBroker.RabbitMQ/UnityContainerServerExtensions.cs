@@ -25,6 +25,7 @@ namespace Simplic.MessageBroker.RabbitMQ
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
             IConfigurationService configurationService,
+            IConnectionConfigurationService connectionConfigurationService,
             ISessionService sessionService
         )
         {
@@ -42,7 +43,7 @@ namespace Simplic.MessageBroker.RabbitMQ
             }
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.InitializeHost(configurationService);
+                cfg.InitializeHost(connectionConfigurationService);
 
                 if (consumerTypes.Any())
                 {
