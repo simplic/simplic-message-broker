@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Simplic.MessageBroker
 {
-    public static class MessageBrokerRedisChannel
+    public static class MessageBrokerChannel
     {
         public const string EnqueueMessageChannel = "messagebroker:queue:enqueue";
         public const string CompleteMessageChannel = "messagebroker:queue:complete";

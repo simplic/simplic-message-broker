@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
-using Simplic.Redis;
-using StackExchange.Redis;
+using Simplic.MessageChannel;
 using System.Threading.Tasks;
 
 namespace Simplic.MessageBroker
@@ -12,15 +11,15 @@ namespace Simplic.MessageBroker
     /// <typeparam name="T"></typeparam>
     public abstract class ConsumerBase<T> : IConsumer<T> where T : class, ICommandBase
     {
-        private readonly IRedisService redisService;
+        private readonly IChannelPublisher channelPublisher;
 
         /// <summary>
         /// Initialize a new instance of ConsumerBase
         /// </summary>
-        /// <param name="redisService">An instance of IRedisService</param>
-        public ConsumerBase(IRedisService redisService)
+        /// <param name="channelPublisher">An instance of IChannelPublisher</param>
+        public ConsumerBase(IChannelPublisher channelPublisher)
         {
-            this.redisService = redisService;
+            this.channelPublisher = channelPublisher;
         }
 
         /// <summary>
@@ -38,7 +37,8 @@ namespace Simplic.MessageBroker
             {
                 Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}");
             }
-            redisService.Publish(MessageBrokerRedisChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = context.Message.UserId }), CommandFlags.FireAndForget);
+
+            channelPublisher.Publish(MessageBrokerChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = context.Message.UserId }));
         }
 
         /// <summary>
