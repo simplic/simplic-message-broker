@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MassTransit;
+﻿using MassTransit;
 using Newtonsoft.Json;
 using Simplic.MessageChannel;
 using Simplic.Session;

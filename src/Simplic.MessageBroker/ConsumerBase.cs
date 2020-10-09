@@ -35,7 +35,6 @@ namespace Simplic.MessageBroker
             if (context.Message.UserId == default(int))
                 context.Message.UserId = userId;
 
-
             try
             {
                 await Execute(context);
