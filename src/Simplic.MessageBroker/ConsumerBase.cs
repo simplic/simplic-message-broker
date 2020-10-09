@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
 using Simplic.MessageChannel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Simplic.MessageBroker
@@ -29,6 +30,12 @@ namespace Simplic.MessageBroker
         /// <returns></returns>
         public virtual async Task Consume(ConsumeContext<T> context)
         {
+            // set the message user id to the sender
+            var userId = (int)context.Headers.First(x => x.Key == "UserId").Value;
+            if (context.Message.UserId == default(int))
+                context.Message.UserId = userId;
+
+
             try
             {
                 await Execute(context);
@@ -38,7 +45,7 @@ namespace Simplic.MessageBroker
                 Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}");
             }
 
-            channelPublisher.Publish(MessageBrokerChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = context.Message.UserId }));
+            channelPublisher.Publish(MessageBrokerChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = userId }));
         }
 
         /// <summary>
