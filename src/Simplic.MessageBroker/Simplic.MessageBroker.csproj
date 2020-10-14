@@ -57,6 +57,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MassTransit">
+      <Version>7.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
       <Version>1.1.1</Version>
     </PackageReference>
