@@ -2,4 +2,8 @@
   <ChangeSet guid="d2d6435f-47ad-4f81-93e8-3c6647387754">
     <Change type="enhancement">Add a timeout while trying to connect to the RabbitMQ server and throws an exception when no connection can be established.</Change>    
   </ChangeSet>
+  <ChangeSet>
+    <Change type="enhancement">Add abstraction for consumers.</Change>
+    <Change type="feature">Add MessageChannel connection and functions to increase/decrease task queues.</Change>
+  </ChangeSet>
 </ReleaseNotes>
