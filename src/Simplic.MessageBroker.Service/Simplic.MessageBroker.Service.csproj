@@ -58,7 +58,7 @@
       <Version>7.2.220.329</Version>
     </PackageReference>
     <PackageReference Include="Simplic.MessageChannel">
-      <Version>1.0.200</Version>
+      <Version>1.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Session">
       <Version>6.4.20.322</Version>

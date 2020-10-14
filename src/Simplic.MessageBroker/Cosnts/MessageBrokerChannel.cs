@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Simplic.MessageBroker
+﻿namespace Simplic.MessageBroker
 {
+    /// <summary>
+    /// Container for message broker channel names
+    /// </summary>
     public static class MessageBrokerChannel
     {
-        public const string EnqueueMessageChannel = "messagebroker:queue:enqueue";
-        public const string CompleteMessageChannel = "messagebroker:queue:complete";
+        /// <summary>
+        /// Message channel name of the global queue
+        /// </summary>
+        public const string GlobalMessageChannel = "messagebroker:queue:global";
+
+        /// <summary>
+        /// Gets the message channel name of the user specific queue
+        /// </summary>
+        /// <param name="userId">The id of the user</param>
+        /// <returns>The name of the user message channel</returns>
+        public static string GetUserMessageChannel(int userId) => $"messagebroker:queue:user:{userId}";
     }
 }

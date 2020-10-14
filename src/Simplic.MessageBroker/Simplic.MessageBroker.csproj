@@ -40,8 +40,8 @@
     <Reference Include="Simplic.Log, Version=7.2.220.329, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Simplic.Log.7.2.220.329\lib\net48\Simplic.Log.dll</HintPath>
     </Reference>
-    <Reference Include="Simplic.MessageChannel, Version=1.0.200.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Simplic.MessageChannel.1.0.200\lib\net48\Simplic.MessageChannel.dll</HintPath>
+    <Reference Include="Simplic.MessageChannel, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Simplic.MessageChannel.1.0.0.1\lib\net48\Simplic.MessageChannel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,9 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\MissingUserIdException.cs" />
     <Compile Include="ConsumerBase.cs" />
     <Compile Include="Cosnts\MessageBrokerChannel.cs" />
-    <Compile Include="Interfaces\ICommandBase.cs" />
+    <Compile Include="Exceptions\UnableToParseUserIdException.cs" />
     <Compile Include="Interfaces\IMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAttribute.cs" />

@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
 using Simplic.MessageChannel;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,17 +11,17 @@ namespace Simplic.MessageBroker
     /// Abstract class to define a base for all in Simplic used consumers
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class ConsumerBase<T> : IConsumer<T> where T : class, ICommandBase
+    public abstract class ConsumerBase<T> : IConsumer<T> where T : class
     {
-        private readonly IChannelPublisher channelPublisher;
+        private readonly IMessageChannel messageChannel;
 
         /// <summary>
         /// Initialize a new instance of ConsumerBase
         /// </summary>
-        /// <param name="channelPublisher">An instance of IChannelPublisher</param>
-        public ConsumerBase(IChannelPublisher channelPublisher)
+        /// <param name="messageChannel">An instance of IChannelPublisher</param>
+        public ConsumerBase(IMessageChannel messageChannel)
         {
-            this.channelPublisher = channelPublisher;
+            this.messageChannel = messageChannel;
         }
 
         /// <summary>
@@ -30,21 +31,36 @@ namespace Simplic.MessageBroker
         /// <returns></returns>
         public virtual async Task Consume(ConsumeContext<T> context)
         {
-            // set the message user id to the sender
-            var userId = (int)context.Headers.First(x => x.Key == "UserId").Value;
-            if (context.Message.UserId == default(int))
-                context.Message.UserId = userId;
+
+            // Try to get the userid from the message header
+            int userId;
+            if (!context.Headers.Any(x => x.Key.ToLower() == "userid"))
+                throw new MissingUserIdException("No UserId header set.");
+
+            // We can use first since we already checked wherther we have a header with a userId
+            if (!int.TryParse(context.Headers.First(x => x.Key.ToLower() == "userid").Value.ToString(), out userId))
+                throw new UnableToParseUserIdException("UserId could not be parsed");
 
             try
             {
+                // Try to call the execute function
                 await Execute(context);
             }
-            catch
+            catch (Exception ex)
             {
-                Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}");
+                Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}", ex);
             }
 
-            channelPublisher.Publish(MessageBrokerChannel.CompleteMessageChannel, JsonConvert.SerializeObject(new { MessageId = context.Message.MessageId, UserId = userId }));
+            try
+            {
+                // Dcrease the task in the global and the user queue
+                messageChannel.StringDecrement(MessageBrokerChannel.GlobalMessageChannel);
+                messageChannel.StringDecrement(MessageBrokerChannel.GetUserMessageChannel(userId));
+            }
+            catch (Exception ex)
+            {
+                Log.LogManagerInstance.Instance.Error("Error while decrementing channel in Consumer", ex);
+            }
         }
 
         /// <summary>

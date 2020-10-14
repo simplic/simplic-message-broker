@@ -14,14 +14,14 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The Message Type</typeparam>
         /// <param name="message">The Message</param>
         /// <param name="cancellationToken"></param>
-        void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class , ICommandBase;
+        void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
         /// Publishes a message
         /// </summary>
         /// <param name="message">The message object</param>
         /// <param name="cancellationToken"></param>
-        void Publish(ICommandBase message, CancellationToken cancellationToken = default);
+        void Publish(object message, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Publishes a message
@@ -29,7 +29,7 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message object</param>
         /// <param name="messageType">The message type</param>
         /// <param name="cancellationToken"></param>
-        void Publish(ICommandBase message, Type messageType, CancellationToken cancellationToken = default);
+        void Publish(object message, Type messageType, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Publishes a message
@@ -37,7 +37,7 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The messgae type</typeparam>
         /// <param name="values">The property values to initialize on the interface</param>
         /// <param name="cancellationToken"></param>
-        void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase;
+        void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
         /// Sends a message
@@ -45,14 +45,14 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The Message Type</typeparam>
         /// <param name="message">The Message</param>
         /// <param name="cancellationToken"></param>
-        void Send<T>(T message, CancellationToken cancellationToken = default) where T : class, ICommandBase;
+        void Send<T>(T message, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
         /// Sends a message
         /// </summary>
         /// <param name="message">The message object</param>
         /// <param name="cancellationToken"></param>
-        void Send(ICommandBase message, CancellationToken cancellationToken = default);
+        void Send(object message, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sends a message
@@ -60,7 +60,7 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message object</param>
         /// <param name="messageType">the message type</param>
         /// <param name="cancellationToken"></param>
-        void Send(ICommandBase message, Type messageType, CancellationToken cancellationToken = default);
+        void Send(object message, Type messageType, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sends a message
@@ -68,6 +68,6 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="values">The property values to initialize on the interface</param>
         /// <param name="cancellationToken"></param>
-        void Send<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase;
+        void Send<T>(object values, CancellationToken cancellationToken = default) where T : class;
     }
 }

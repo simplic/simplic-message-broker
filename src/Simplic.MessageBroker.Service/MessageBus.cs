@@ -13,17 +13,17 @@ namespace Simplic.MessageBroker
     public class MessageBus : IMessageBus
     {
         private readonly IBusControl bus;
-        private readonly IChannelPublisher channelPublisher;
+        private readonly IMessageChannel messageChannel;
         private readonly ISessionService sessionService;
 
         /// <summary>
         /// Initializes a new instance of PublishService
         /// </summary>
         /// <param name="busControl"></param>
-        public MessageBus(IBusControl busControl, IChannelPublisher channelPublisher, ISessionService sessionService)
+        public MessageBus(IBusControl busControl, IMessageChannel messageChannel, ISessionService sessionService)
         {
             bus = busControl;
-            this.channelPublisher = channelPublisher;
+            this.messageChannel = messageChannel;
             this.sessionService = sessionService;
         }
 
@@ -33,9 +33,9 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class, ICommandBase
+        public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
-            message = PublishInMessageChannel<T>(message);
+            IncrementMessageChannel();
             bus.Publish<T>(message, cancellationToken);
         }
 
@@ -44,9 +44,9 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Publish(ICommandBase message, CancellationToken cancellationToken = default)
+        public void Publish(object message, CancellationToken cancellationToken = default)
         {
-            message = PublishInMessageChannel(message);
+            IncrementMessageChannel();
             bus.Publish(message, cancellationToken);
         }
 
@@ -56,9 +56,9 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message</param>
         /// <param name="messageType">the message type</param>
         /// <param name="cancellationToken"></param>
-        public void Publish(ICommandBase message, Type messageType, CancellationToken cancellationToken = default)
+        public void Publish(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            message = PublishInMessageChannel(message);
+            IncrementMessageChannel();
             bus.Publish(message, messageType, cancellationToken);
         }
 
@@ -68,23 +68,10 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">the message type</typeparam>
         /// <param name="values"></param>
         /// <param name="cancellationToken"></param>
-        public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
+        public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
-            try
-            {
-                var type = values.GetType();
-
-                var id = (Guid)type.GetProperty("MessageId").GetValue(values);
-                if (id == null || id == Guid.Empty)
-                    throw new Exception("No MessageId set");
-
-                PublishInMessageChannel(id);
-                bus.Publish<T>(values, cancellationToken);
-            }
-            catch
-            {
-                bus.Publish<T>(values, cancellationToken);
-            }
+                IncrementMessageChannel();
+                bus.Publish<T>(values, cancellationToken);   
         }
 
         /// <summary>
@@ -93,9 +80,9 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="message">The message</param>
         /// <param name="cancellationToken"></param>
-        public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class, ICommandBase
+        public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
-            message = PublishInMessageChannel(message);
+            IncrementMessageChannel();
             bus.Send<T>(message, cancellationToken);
         }
 
@@ -104,9 +91,9 @@ namespace Simplic.MessageBroker
         /// </summary>
         /// <param name="message">the message</param>
         /// <param name="cancellationToken"></param>
-        public void Send(ICommandBase message, CancellationToken cancellationToken = default)
+        public void Send(object message, CancellationToken cancellationToken = default)
         {
-            message = PublishInMessageChannel(message);
+            IncrementMessageChannel();
             bus.Send(message, cancellationToken);
         }
 
@@ -116,9 +103,9 @@ namespace Simplic.MessageBroker
         /// <param name="message">The message</param>
         /// <param name="messageType">The message type</param>
         /// <param name="cancellationToken"></param>
-        public void Send(ICommandBase message, Type messageType, CancellationToken cancellationToken = default)
+        public void Send(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            message = PublishInMessageChannel(message);
+            IncrementMessageChannel();
             bus.Send(message, messageType);
         }
 
@@ -128,15 +115,9 @@ namespace Simplic.MessageBroker
         /// <typeparam name="T">The message type</typeparam>
         /// <param name="values">The property values to initialize on the interface</param>
         /// <param name="cancellationToken"></param>
-        public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class, ICommandBase
+        public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
-            var type = values.GetType();
-
-            var id = (Guid)type.GetProperty("MessageId").GetValue(values);
-            if (id == null || id == Guid.Empty)
-                throw new Exception("No MessageId set");
-
-            PublishInMessageChannel(id);
+            IncrementMessageChannel();
             bus.Send<T>(values, cancellationToken);
         }
 
@@ -144,37 +125,18 @@ namespace Simplic.MessageBroker
         /// Publishes a message to a message channel
         /// </summary>
         /// <param name="commandBase"></param>
-        private T PublishInMessageChannel<T>(T commandBase) where T : ICommandBase
+        private void IncrementMessageChannel()
         {
             try
             {
-                commandBase.UserId = sessionService.CurrentSession.UserId;
-                commandBase.MessageId = Guid.NewGuid();
-
-                channelPublisher.Publish(MessageBrokerChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = commandBase.MessageId, UserId = commandBase.UserId }));
+                var userId = sessionService.CurrentSession.UserId;
+                messageChannel.StringIncrement(MessageBrokerChannel.GlobalMessageChannel);
+                messageChannel.StringIncrement(MessageBrokerChannel.GetUserMessageChannel(userId));
             }
             catch (Exception ex)
             {
-                Log.LogManagerInstance.Instance.Error("Error while publishing to message channel db", ex);
+                Log.LogManagerInstance.Instance.Error("Error while incrementing in message channel db", ex);
             };
-
-            return commandBase;
-        }
-
-        /// <summary>
-        /// Publishes a message to a channel
-        /// </summary>
-        /// <param name="messageId"></param>
-        private void PublishInMessageChannel(Guid messageId)
-        {
-            try
-            {
-                channelPublisher.Publish(MessageBrokerChannel.EnqueueMessageChannel, JsonConvert.SerializeObject(new { MessageId = messageId, UserId = sessionService.CurrentSession.UserId }));
-            }
-            catch (Exception ex)
-            {
-                Log.LogManagerInstance.Instance.Error("Error while publishing to message channel db", ex);
-            }
         }
     }
 }

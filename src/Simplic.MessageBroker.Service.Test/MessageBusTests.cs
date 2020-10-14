@@ -19,7 +19,7 @@ namespace Simplic.MessageBroker.Service.Test
 
             var channelPublisher = new Mock<IChannelPublisher>();
             var publishCalled = 0;
-            channelPublisher.Setup(x => x.Publish(It.IsAny<string>(), It.Is<string>(y => y.Contains("MessageId") && y.Contains("UserId"))))
+            channelPublisher.Setup(x => x.PublishAsync(It.IsAny<string>(), It.Is<string>(y => y.Contains("MessageId") && y.Contains("UserId"))))
                 .Callback(() =>
                 {
                     publishCalled += 1;
