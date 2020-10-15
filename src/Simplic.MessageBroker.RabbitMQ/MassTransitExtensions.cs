@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using MassTransit.RabbitMqTransport;
 using Simplic.Configuration;
+using System;
 
 namespace Simplic.MessageBroker.RabbitMQ
 {
@@ -16,13 +17,11 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <param name="configurationService"></param>
         public static void InitializeHost(
             this IRabbitMqBusFactoryConfigurator rabbitMQConfigurator,
-            IConfigurationService configurationService)
+            IConnectionConfigurationService configurationService)
         {
-            rabbitMQConfigurator.Host(configurationService.GetValue<string>("Host", "RabbitMQ", ""), host =>
-            {
-                host.Username(configurationService.GetValue<string>("UserName", "RabbitMQ", ""));
-                host.Password(configurationService.GetValue<string>("Password", "RabbitMQ", ""));
-            });
+            var connectionString = configurationService.GetByName("RabbitMQ").ConnectionString;
+            var uri = new Uri(connectionString);
+            rabbitMQConfigurator.Host(uri);
         }
     }
 }

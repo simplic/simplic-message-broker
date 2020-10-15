@@ -22,11 +22,12 @@ namespace Simplic.MessageBroker.RabbitMQ
         public static IUnityContainer InitializeMassTransitForClient(
             this IUnityContainer container,
             IConfigurationService configurationService,
+            IConnectionConfigurationService connectionConfigurationService,
             ISessionService sessionService)
         {
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.InitializeHost(configurationService);
+                cfg.InitializeHost(connectionConfigurationService);
 
                 var session = sessionService.CurrentSession;
 
