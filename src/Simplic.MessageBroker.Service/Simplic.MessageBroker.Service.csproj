@@ -54,11 +54,11 @@
     <PackageReference Include="MassTransit.RabbitMQ">
       <Version>7.0.4</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.InMemoryDB">
+      <Version>1.0.120.1014</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.Log">
       <Version>7.2.220.329</Version>
-    </PackageReference>
-    <PackageReference Include="Simplic.MessageChannel">
-      <Version>1.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Session">
       <Version>6.4.20.322</Version>
