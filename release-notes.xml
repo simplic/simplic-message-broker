@@ -2,7 +2,7 @@
   <ChangeSet guid="d2d6435f-47ad-4f81-93e8-3c6647387754">
     <Change type="enhancement">Add a timeout while trying to connect to the RabbitMQ server and throws an exception when no connection can be established.</Change>    
   </ChangeSet>
-  <ChangeSet>
+  <ChangeSet guid="96ec6ff4-d58e-480c-abe4-f9cf052e7bda">
     <Change type="enhancement">Add abstract consumer implementation, to enable a standardized message-architecture.</Change>
     <Change type="feature">Adds a system to monitor the amount of executed tasks.</Change>
   </ChangeSet>
