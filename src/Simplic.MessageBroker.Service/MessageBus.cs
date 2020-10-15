@@ -1,4 +1,7 @@
 ﻿using MassTransit;
+using Newtonsoft.Json;
+using Simplic.InMemoryDB;
+using Simplic.Session;
 using System;
 using System.Threading;
 
@@ -10,14 +13,18 @@ namespace Simplic.MessageBroker
     public class MessageBus : IMessageBus
     {
         private readonly IBusControl bus;
+        private readonly IKeyValueStore keyValueStore;
+        private readonly ISessionService sessionService;
 
         /// <summary>
         /// Initializes a new instance of PublishService
         /// </summary>
         /// <param name="busControl"></param>
-        public MessageBus(IBusControl busControl)
+        public MessageBus(IBusControl busControl, IKeyValueStore keyValueStore, ISessionService sessionService)
         {
             bus = busControl;
+            this.keyValueStore = keyValueStore;
+            this.sessionService = sessionService;
         }
 
         /// <summary>
@@ -28,6 +35,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
+            IncrementMessageChannel();
             bus.Publish<T>(message, cancellationToken);
         }
 
@@ -38,6 +46,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish(object message, CancellationToken cancellationToken = default)
         {
+            IncrementMessageChannel();
             bus.Publish(message, cancellationToken);
         }
 
@@ -49,6 +58,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish(object message, Type messageType, CancellationToken cancellationToken = default)
         {
+            IncrementMessageChannel();
             bus.Publish(message, messageType, cancellationToken);
         }
 
@@ -60,7 +70,8 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
-            bus.Publish<T>(values, cancellationToken);
+                IncrementMessageChannel();
+                bus.Publish<T>(values, cancellationToken);   
         }
 
         /// <summary>
@@ -71,6 +82,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
+            IncrementMessageChannel();
             bus.Send<T>(message, cancellationToken);
         }
 
@@ -81,6 +93,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send(object message, CancellationToken cancellationToken = default)
         {
+            IncrementMessageChannel();
             bus.Send(message, cancellationToken);
         }
 
@@ -92,6 +105,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send(object message, Type messageType, CancellationToken cancellationToken = default)
         {
+            IncrementMessageChannel();
             bus.Send(message, messageType);
         }
 
@@ -103,7 +117,26 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
+            IncrementMessageChannel();
             bus.Send<T>(values, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes a message to a message channel
+        /// </summary>
+        /// <param name="commandBase"></param>
+        private void IncrementMessageChannel()
+        {
+            try
+            {
+                var userId = sessionService.CurrentSession.UserId;
+                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GlobalQueueKey);
+                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GetUserQueueKey(userId));
+            }
+            catch (Exception ex)
+            {
+                Log.LogManagerInstance.Instance.Error("Error while incrementing in message channel db", ex);
+            };
         }
     }
 }
