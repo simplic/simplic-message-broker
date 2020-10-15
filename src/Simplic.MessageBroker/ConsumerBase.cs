@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
-using Simplic.MessageChannel;
+using Simplic.InMemoryDB;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,15 +13,15 @@ namespace Simplic.MessageBroker
     /// <typeparam name="T"></typeparam>
     public abstract class ConsumerBase<T> : IConsumer<T> where T : class
     {
-        private readonly IMessageChannel messageChannel;
+        private readonly IKeyValueStore keyValueStore;
 
         /// <summary>
         /// Initialize a new instance of ConsumerBase
         /// </summary>
-        /// <param name="messageChannel">An instance of IChannelPublisher</param>
-        public ConsumerBase(IMessageChannel messageChannel)
+        /// <param name="keyValueStore">An instance of IChannelPublisher</param>
+        public ConsumerBase(IKeyValueStore keyValueStore)
         {
-            this.messageChannel = messageChannel;
+            this.keyValueStore = keyValueStore;
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace Simplic.MessageBroker
             try
             {
                 // Dcrease the task in the global and the user queue
-                messageChannel.StringDecrement(MessageBrokerChannel.GlobalMessageChannel);
-                messageChannel.StringDecrement(MessageBrokerChannel.GetUserMessageChannel(userId));
+                keyValueStore.StringDecrement(MessageBrokerChannel.GlobalMessageChannel);
+                keyValueStore.StringDecrement(MessageBrokerChannel.GetUserMessageChannel(userId));
             }
             catch (Exception ex)
             {

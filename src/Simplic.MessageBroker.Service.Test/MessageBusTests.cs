@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Moq;
-using Simplic.MessageChannel;
+using Simplic.InMemoryDB;
 using Simplic.Session;
 using Unity;
 using Xunit;
@@ -16,18 +16,18 @@ namespace Simplic.MessageBroker.Service.Test
 
             container.RegisterType<IMessageBus, MessageBus>();
 
-            #region Mock IMessageChannel
+            #region Mock IKeyValueStore
 
-            var messageChannel = new Mock<IMessageChannel>();
+            var keyValueStore = new Mock<IKeyValueStore>();
             var incrementCalled = 0;
-            messageChannel.Setup(x => x.StringIncrement(It.IsAny<string>(), It.IsAny<double>()))
+            keyValueStore.Setup(x => x.StringIncrement(It.IsAny<string>(), It.IsAny<double>()))
                 .Callback(() =>
                 {
                     incrementCalled += 1;
                 });
-            container.RegisterInstance<IMessageChannel>(messageChannel.Object);
+            container.RegisterInstance<IKeyValueStore>(keyValueStore.Object);
 
-            #endregion Mock IMessageChannel
+            #endregion Mock IKeyValueStore
 
             #region Mock ISessionService
 

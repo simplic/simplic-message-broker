@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
-using Simplic.MessageChannel;
+using Simplic.InMemoryDB;
 using Simplic.Session;
 using System;
 using System.Threading;
@@ -13,17 +13,17 @@ namespace Simplic.MessageBroker
     public class MessageBus : IMessageBus
     {
         private readonly IBusControl bus;
-        private readonly IMessageChannel messageChannel;
+        private readonly IKeyValueStore keyValueStore;
         private readonly ISessionService sessionService;
 
         /// <summary>
         /// Initializes a new instance of PublishService
         /// </summary>
         /// <param name="busControl"></param>
-        public MessageBus(IBusControl busControl, IMessageChannel messageChannel, ISessionService sessionService)
+        public MessageBus(IBusControl busControl, IKeyValueStore keyValueStore, ISessionService sessionService)
         {
             bus = busControl;
-            this.messageChannel = messageChannel;
+            this.keyValueStore = keyValueStore;
             this.sessionService = sessionService;
         }
 
@@ -130,8 +130,8 @@ namespace Simplic.MessageBroker
             try
             {
                 var userId = sessionService.CurrentSession.UserId;
-                messageChannel.StringIncrement(MessageBrokerChannel.GlobalMessageChannel);
-                messageChannel.StringIncrement(MessageBrokerChannel.GetUserMessageChannel(userId));
+                keyValueStore.StringIncrement(MessageBrokerChannel.GlobalMessageChannel);
+                keyValueStore.StringIncrement(MessageBrokerChannel.GetUserMessageChannel(userId));
             }
             catch (Exception ex)
             {
