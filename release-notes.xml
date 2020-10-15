@@ -3,7 +3,7 @@
     <Change type="enhancement">Add a timeout while trying to connect to the RabbitMQ server and throws an exception when no connection can be established.</Change>    
   </ChangeSet>
   <ChangeSet>
-    <Change type="enhancement">Add abstraction for consumers.</Change>
-    <Change type="feature">Add MessageChannel connection and functions to increase/decrease task queues.</Change>
+    <Change type="enhancement">Add abstract consumer implementation, to enable a standardized message-architecture.</Change>
+    <Change type="feature">Adds a system to monitor the amount of executed tasks.</Change>
   </ChangeSet>
 </ReleaseNotes>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Simplic.MessageBroker
 {
     /// <summary>
-    /// Exception to signalise that the given userid could not be parsed as int
+    /// Exception to signalize that the given userid could not be parsed as int
     /// </summary>
     public class UnableToParseUserIdException : Exception
     {

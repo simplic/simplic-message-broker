@@ -59,7 +59,7 @@ namespace Simplic.MessageBroker
             }
             catch (Exception ex)
             {
-                Log.LogManagerInstance.Instance.Error("Error while decrementing channel in Consumer", ex);
+                Log.LogManagerInstance.Instance.Error("Error while updating in memory db key.", ex);
             }
         }
 
