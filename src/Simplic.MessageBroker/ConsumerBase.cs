@@ -54,8 +54,8 @@ namespace Simplic.MessageBroker
             try
             {
                 // Dcrease the task in the global and the user queue
-                keyValueStore.StringDecrement(MessageBrokerChannel.GlobalMessageChannel);
-                keyValueStore.StringDecrement(MessageBrokerChannel.GetUserMessageChannel(userId));
+                keyValueStore.StringDecrement(MessageBrokerQueueKeys.GlobalQueueKey);
+                keyValueStore.StringDecrement(MessageBrokerQueueKeys.GetUserQueueKey(userId));
             }
             catch (Exception ex)
             {

@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\MissingUserIdException.cs" />
     <Compile Include="ConsumerBase.cs" />
-    <Compile Include="Cosnts\MessageBrokerChannel.cs" />
+    <Compile Include="Cosnts\MessageBrokerQueueKeys.cs" />
     <Compile Include="Exceptions\UnableToParseUserIdException.cs" />
     <Compile Include="Interfaces\IMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

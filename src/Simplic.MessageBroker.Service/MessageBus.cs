@@ -130,8 +130,8 @@ namespace Simplic.MessageBroker
             try
             {
                 var userId = sessionService.CurrentSession.UserId;
-                keyValueStore.StringIncrement(MessageBrokerChannel.GlobalMessageChannel);
-                keyValueStore.StringIncrement(MessageBrokerChannel.GetUserMessageChannel(userId));
+                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GlobalQueueKey);
+                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GetUserQueueKey(userId));
             }
             catch (Exception ex)
             {
