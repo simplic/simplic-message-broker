@@ -64,10 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit">
-      <Version>7.0.4</Version>
+      <Version>7.0.7</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.14.6</Version>
+      <Version>4.15.2</Version>
     </PackageReference>
     <PackageReference Include="Simplic.InMemoryDB">
       <Version>1.0.120.1014</Version>
@@ -79,7 +79,7 @@
       <Version>2.0.320.41</Version>
     </PackageReference>
     <PackageReference Include="Unity">
-      <Version>5.11.7</Version>
+      <Version>5.11.8</Version>
     </PackageReference>
     <PackageReference Include="Unity.Container">
       <Version>5.11.8</Version>

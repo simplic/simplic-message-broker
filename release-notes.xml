@@ -6,4 +6,7 @@
     <Change type="enhancement">Add abstract consumer implementation, to enable a standardized message-architecture.</Change>
     <Change type="feature">Adds a system to monitor the amount of executed tasks.</Change>
   </ChangeSet>
+  <ChangeSet>
+    <Change type="enhancement">Update MassTransit dependency to 7.0.7.</Change>
+  </ChangeSet>
 </ReleaseNotes>
