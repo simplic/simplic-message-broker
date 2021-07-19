@@ -20,10 +20,10 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <summary>
         /// Initializes MassTransit for a server
         /// </summary>
-        /// <param name="container"></param>
-        /// <param name="configurationService"></param>
-        /// <param name="connectionConfigurationService"></param>
-        /// <param name="sessionService"></param>
+        /// <param name="container">Unity container instance</param>
+        /// <param name="configurationService">Configuration service instance</param>
+        /// <param name="connectionConfigurationService">Connection string configuration service</param>
+        /// <param name="sessionService">Session service instance</param>
         /// <returns></returns>
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
@@ -38,10 +38,10 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <summary>
         /// Initializes MassTransit for a server
         /// </summary>
-        /// <param name="container"></param>
-        /// <param name="configurationService"></param>
-        /// <param name="connectionConfigurationService"></param>
-        /// <param name="sessionService"></param>
+        /// <param name="container">Unity container instance</param>
+        /// <param name="configurationService">Configuration service instance</param>
+        /// <param name="connectionConfigurationService">Connection string configuration service</param>
+        /// <param name="sessionService">Session service instance</param>
         /// <param name="context">Context to filter. Null or empty string for no filtering</param>
         /// <returns></returns>
         public static IUnityContainer InitializeMassTransitForServer(
