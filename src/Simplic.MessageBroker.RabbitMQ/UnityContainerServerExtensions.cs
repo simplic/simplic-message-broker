@@ -17,6 +17,8 @@ namespace Simplic.MessageBroker.RabbitMQ
     /// </summary>
     public static class UnityContainerServerExtensions
     {
+        private static bool serverInitialized = false;
+
         /// <summary>
         /// Initializes MassTransit for a server
         /// </summary>
@@ -24,7 +26,7 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <param name="configurationService">Configuration service instance</param>
         /// <param name="connectionConfigurationService">Connection string configuration service</param>
         /// <param name="sessionService">Session service instance</param>
-        /// <returns></returns>
+        /// <returns>Unity container instance</returns>
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
             IConfigurationService configurationService,
@@ -43,7 +45,7 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <param name="connectionConfigurationService">Connection string configuration service</param>
         /// <param name="sessionService">Session service instance</param>
         /// <param name="context">Context to filter. Null or empty string for no filtering</param>
-        /// <returns></returns>
+        /// <returns>Unity container instance</returns>
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
             IConfigurationService configurationService,
@@ -51,6 +53,11 @@ namespace Simplic.MessageBroker.RabbitMQ
             ISessionService sessionService, string context
         )
         {
+            if (serverInitialized)
+                throw new Exception("Message broker already initialized");
+
+            serverInitialized = true;
+
             var consumerTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetLoadableTypes())
                 .Where(t => typeof(IConsumer).IsAssignableFrom(t))
                 .ToList();
@@ -77,7 +84,7 @@ namespace Simplic.MessageBroker.RabbitMQ
                         {
                             if (string.IsNullOrWhiteSpace(context) && !queue.FilterContext)
                                 consumers.Add(queue.Name, consumerType);
-                            else if(!string.IsNullOrWhiteSpace(context) && queue.FilterContext && queue.Context == context)
+                            else if (!string.IsNullOrWhiteSpace(context) && queue.FilterContext && queue.Context == context)
                                 consumers.Add(queue.Name, consumerType);
                         }
                     }

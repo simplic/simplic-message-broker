@@ -11,5 +11,6 @@
   </ChangeSet>
   <ChangeSet>
     <Change type="enhancement">Adds the possibility to filter queues using a context.</Change>
+    <Change type="enhancement">Checks whether a message broker server is already started.</Change>
   </ChangeSet>
 </ReleaseNotes>
