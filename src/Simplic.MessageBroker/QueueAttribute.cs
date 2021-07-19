@@ -14,11 +14,13 @@ namespace Simplic.MessageBroker
         /// <param name="name">Name of the queue Attribute</param>
         /// <param name="context">The context in which the consumer will be enabled</param>
         /// <param name="type">The consumer type</param>
-        public QueueAttribute(string name, string context, QueueType type = QueueType.Server)
+        /// <param name="filterContext">Gets or sets whether to filter the actual context</param>
+        public QueueAttribute(string name, string context, QueueType type = QueueType.Server, bool filterContext = false)
         {
             Name = name;
             Context = context;
             Type = type;
+            FilterContext = filterContext;
         }
 
         /// <summary>
@@ -35,5 +37,10 @@ namespace Simplic.MessageBroker
         /// Gets the context
         /// </summary>
         public string Context { get; }
+
+        /// <summary>
+        /// Gets whether to filter the actual context
+        /// </summary>
+        public bool FilterContext { get; }
     }
 }

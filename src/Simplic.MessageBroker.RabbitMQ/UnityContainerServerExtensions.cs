@@ -22,12 +22,33 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// </summary>
         /// <param name="container"></param>
         /// <param name="configurationService"></param>
+        /// <param name="connectionConfigurationService"></param>
+        /// <param name="sessionService"></param>
         /// <returns></returns>
         public static IUnityContainer InitializeMassTransitForServer(
             this IUnityContainer container,
             IConfigurationService configurationService,
             IConnectionConfigurationService connectionConfigurationService,
             ISessionService sessionService
+        )
+        {
+            return InitializeMassTransitForServer(container, configurationService, connectionConfigurationService, sessionService, null);
+        }
+
+        /// <summary>
+        /// Initializes MassTransit for a server
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="configurationService"></param>
+        /// <param name="connectionConfigurationService"></param>
+        /// <param name="sessionService"></param>
+        /// <param name="context">Context to filter. Null or empty string for no filtering</param>
+        /// <returns></returns>
+        public static IUnityContainer InitializeMassTransitForServer(
+            this IUnityContainer container,
+            IConfigurationService configurationService,
+            IConnectionConfigurationService connectionConfigurationService,
+            ISessionService sessionService, string context
         )
         {
             var consumerTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetLoadableTypes())
@@ -52,10 +73,12 @@ namespace Simplic.MessageBroker.RabbitMQ
                     foreach (var consumerType in consumerTypes)
                     {
                         var attributes = consumerType.GetCustomAttributes(typeof(QueueAttribute), true);
-                        if (attributes.Any())
+                        if (attributes.Any() && attributes[0] is QueueAttribute queue)
                         {
-                            var queueName = ((QueueAttribute)attributes[0]).Name;
-                            consumers.Add(queueName, consumerType);
+                            if (string.IsNullOrWhiteSpace(context) && !queue.FilterContext)
+                                consumers.Add(queue.Name, consumerType);
+                            else if(!string.IsNullOrWhiteSpace(context) && queue.FilterContext && queue.Context == context)
+                                consumers.Add(queue.Name, consumerType);
                         }
                     }
 
