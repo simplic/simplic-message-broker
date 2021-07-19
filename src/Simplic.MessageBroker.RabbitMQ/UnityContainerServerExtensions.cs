@@ -27,12 +27,10 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <param name="connectionConfigurationService">Connection string configuration service</param>
         /// <param name="sessionService">Session service instance</param>
         /// <returns>Unity container instance</returns>
-        public static IUnityContainer InitializeMassTransitForServer(
-            this IUnityContainer container,
-            IConfigurationService configurationService,
-            IConnectionConfigurationService connectionConfigurationService,
-            ISessionService sessionService
-        )
+        public static IUnityContainer InitializeMassTransitForServer(this IUnityContainer container
+                                                                        , IConfigurationService configurationService
+                                                                        , IConnectionConfigurationService connectionConfigurationService
+                                                                        , ISessionService sessionService)
         {
             return InitializeMassTransitForServer(container, configurationService, connectionConfigurationService, sessionService, null);
         }
@@ -46,12 +44,11 @@ namespace Simplic.MessageBroker.RabbitMQ
         /// <param name="sessionService">Session service instance</param>
         /// <param name="context">Context to filter. Null or empty string for no filtering</param>
         /// <returns>Unity container instance</returns>
-        public static IUnityContainer InitializeMassTransitForServer(
-            this IUnityContainer container,
-            IConfigurationService configurationService,
-            IConnectionConfigurationService connectionConfigurationService,
-            ISessionService sessionService, string context
-        )
+        public static IUnityContainer InitializeMassTransitForServer(this IUnityContainer container
+                                                                        , IConfigurationService configurationService
+                                                                        , IConnectionConfigurationService connectionConfigurationService
+                                                                        , ISessionService sessionService
+                                                                        , string context)
         {
             if (serverInitialized)
                 throw new Exception("Message broker already initialized");
