@@ -46,10 +46,11 @@
   <ItemGroup>
     <Compile Include="Exceptions\MissingUserIdException.cs" />
     <Compile Include="ConsumerBase.cs" />
-    <Compile Include="Cosnts\MessageBrokerQueueKeys.cs" />
+    <Compile Include="Consts\MessageBrokerQueueKeys.cs" />
     <Compile Include="Exceptions\UnableToParseUserIdException.cs" />
     <Compile Include="Interfaces\IMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NoQueueAttribute.cs" />
     <Compile Include="QueueAttribute.cs" />
     <Compile Include="QueueType.cs" />
   </ItemGroup>

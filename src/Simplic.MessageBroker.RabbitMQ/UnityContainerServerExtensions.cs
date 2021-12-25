@@ -36,7 +36,8 @@ namespace Simplic.MessageBroker.RabbitMQ
 
             foreach (var consumer in consumerTypes)
             {
-                if (consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(QueueAttribute)))
+                if (consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(QueueAttribute))
+                    || consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(NoQueueAttribute)))
                 {
                     Console.WriteLine($"Consumer found {consumer.FullName}");
                     container.RegisterType(consumer);
@@ -49,6 +50,8 @@ namespace Simplic.MessageBroker.RabbitMQ
                 if (consumerTypes.Any())
                 {
                     var consumers = new Dictionary<string, Type>();
+                    var queuelessConsumer = new List<Type>();
+
                     foreach (var consumerType in consumerTypes)
                     {
                         var attributes = consumerType.GetCustomAttributes(typeof(QueueAttribute), true);
@@ -57,12 +60,22 @@ namespace Simplic.MessageBroker.RabbitMQ
                             var queueName = ((QueueAttribute)attributes[0]).Name;
                             consumers.Add(queueName, consumerType);
                         }
+
+                        attributes = consumerType.GetCustomAttributes(typeof(NoQueueAttribute), true);
+                        if (attributes.Any())
+                            queuelessConsumer.Add(consumerType);
                     }
 
                     Console.WriteLine($"Consumers found: {consumers.Count}");
 
+                    Console.WriteLine($"Queueless consumers found: {queuelessConsumer.Count}");
+
                     foreach (var consumer in consumers)
                         cfg.ReceiveEndpoint(consumer.Key, ec => ec.Consumer(consumer.Value, x => { return container.Resolve(x); }));
+
+                    // Register event-consumer without the need of having a queue
+                    foreach (var consumer in queuelessConsumer)
+                        cfg.ReceiveEndpoint(ec => ec.Consumer(consumer, x => { return container.Resolve(x); }));
                 }
 
                 var session = sessionService.CurrentSession;
