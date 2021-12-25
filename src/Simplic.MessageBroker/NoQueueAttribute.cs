@@ -3,8 +3,7 @@
 namespace Simplic.MessageBroker
 {
     /// <summary>
-    /// Class to represent a no-queue attribute. Consumer that are tagges with this attributes
-    /// are queue-less
+    /// Attribute for marking a consumer as queueless-consumer.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class NoQueueAttribute : Attribute
