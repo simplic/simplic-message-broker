@@ -9,4 +9,7 @@
   <ChangeSet guid="91e30395-e7cc-4dcd-98a7-9b492dd50492">
     <Change type="enhancement">Update MassTransit dependency to 7.0.7.</Change>
   </ChangeSet>
+  <ChangeSet>
+    <Change type="feature">Adds the possibility to have queue-less event consumer (New attribute `NoQueue`).</Change>
+  </ChangeSet>
 </ReleaseNotes>
