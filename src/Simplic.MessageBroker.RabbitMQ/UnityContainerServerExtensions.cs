@@ -67,7 +67,6 @@ namespace Simplic.MessageBroker.RabbitMQ
                     }
 
                     Console.WriteLine($"Consumers found: {consumers.Count}");
-
                     Console.WriteLine($"Queueless consumers found: {queuelessConsumer.Count}");
 
                     foreach (var consumer in consumers)
