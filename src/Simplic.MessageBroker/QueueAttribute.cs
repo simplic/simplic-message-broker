@@ -6,7 +6,7 @@ namespace Simplic.MessageBroker
     /// Class to represent a queue attribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class QueueAttribute : Attribute
+    public class QueueAttribute : Attribute, IServiceContext
     {
         /// <summary>
         /// Initializes a new instance of QueueAttribute

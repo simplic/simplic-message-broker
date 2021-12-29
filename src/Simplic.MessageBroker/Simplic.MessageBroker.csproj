@@ -49,6 +49,7 @@
     <Compile Include="Consts\MessageBrokerQueueKeys.cs" />
     <Compile Include="Exceptions\UnableToParseUserIdException.cs" />
     <Compile Include="Interfaces\IMessageBus.cs" />
+    <Compile Include="IServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAttribute.cs" />
     <Compile Include="NoQueueAttribute.cs" />

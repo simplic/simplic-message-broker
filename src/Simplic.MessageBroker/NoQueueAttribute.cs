@@ -6,7 +6,7 @@ namespace Simplic.MessageBroker
     /// Attribute for marking a consumer as queueless-consumer.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class NoQueueAttribute : Attribute
+    public class NoQueueAttribute : Attribute, IServiceContext
     {
         /// <summary>
         /// Initializes a new instance of NoQueueAttribute

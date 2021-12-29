@@ -63,6 +63,9 @@
     <PackageReference Include="Simplic.Data">
       <Version>1.6.120.322</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.ServicePlatform">
+      <Version>1.0.600</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.Session">
       <Version>6.4.20.322</Version>
     </PackageReference>

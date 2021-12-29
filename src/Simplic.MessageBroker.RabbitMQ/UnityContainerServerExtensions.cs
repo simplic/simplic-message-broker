@@ -2,6 +2,7 @@
 using MassTransit;
 using MassTransit.Testing;
 using Simplic.Configuration;
+using Simplic.ServicePlatform;
 using Simplic.Session;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,28 @@ namespace Simplic.MessageBroker.RabbitMQ
                 .Where(t => typeof(IConsumer).IsAssignableFrom(t))
                 .ToList();
 
+            var serviceSession = container.Resolve<IServiceSession>();
+
             foreach (var consumer in consumerTypes)
             {
                 if (consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(QueueAttribute))
                     || consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(NoQueueAttribute)))
                 {
-                    Console.WriteLine($"Consumer found {consumer.FullName}");
-                    container.RegisterType(consumer);
+                    var attribute = consumer.GetCustomAttributes()
+                                            .OfType<IServiceContext>()
+                                            .FirstOrDefault();
+
+                    var context = attribute.Context;
+
+                    if (context != null && serviceSession.Modules.Any(x => x.Name == context))
+                    {
+                        Console.WriteLine($" Consumer found {consumer.FullName} / {context}");
+                        container.RegisterType(consumer);
+                    }
+                    else
+                    {
+                        Console.WriteLine($" /Skip consumer found {consumer.FullName} / {context}");
+                    }
                 }
             }
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
