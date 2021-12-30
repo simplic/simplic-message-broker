@@ -36,6 +36,7 @@ namespace Simplic.MessageBroker.RabbitMQ
                 .ToList();
 
             var serviceSession = container.Resolve<IServiceSession>();
+            var registeredConsumer = new List<Type>();
 
             foreach (var consumer in consumerTypes)
             {
@@ -52,6 +53,7 @@ namespace Simplic.MessageBroker.RabbitMQ
                     {
                         Console.WriteLine($" Consumer found {consumer.FullName} / {context}");
                         container.RegisterType(consumer);
+                        registeredConsumer.Add(consumer);
                     }
                     else
                     {
@@ -63,12 +65,12 @@ namespace Simplic.MessageBroker.RabbitMQ
             {
                 cfg.InitializeHost(connectionConfigurationService);
 
-                if (consumerTypes.Any())
+                if (registeredConsumer.Any())
                 {
                     var consumers = new Dictionary<string, Type>();
                     var queuelessConsumer = new List<Type>();
 
-                    foreach (var consumerType in consumerTypes)
+                    foreach (var consumerType in registeredConsumer)
                     {
                         var attributes = consumerType.GetCustomAttributes(typeof(QueueAttribute), true);
                         if (attributes.Any())

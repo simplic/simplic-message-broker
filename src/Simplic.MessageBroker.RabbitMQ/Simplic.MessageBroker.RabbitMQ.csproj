@@ -58,13 +58,13 @@
       <Version>7.0.7</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Configuration">
-      <Version>7.0.20.1006</Version>
+      <Version>7.0.321.705</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Data">
-      <Version>1.6.120.322</Version>
+      <Version>2.0.121.1202</Version>
     </PackageReference>
     <PackageReference Include="Simplic.ServicePlatform">
-      <Version>1.0.600</Version>
+      <Version>1.0.1321.1230</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Session">
       <Version>6.4.20.322</Version>
