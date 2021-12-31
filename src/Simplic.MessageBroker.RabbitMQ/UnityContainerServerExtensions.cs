@@ -2,6 +2,7 @@
 using MassTransit;
 using MassTransit.Testing;
 using Simplic.Configuration;
+using Simplic.ServicePlatform;
 using Simplic.Session;
 using System;
 using System.Collections.Generic;
@@ -34,22 +35,42 @@ namespace Simplic.MessageBroker.RabbitMQ
                 .Where(t => typeof(IConsumer).IsAssignableFrom(t))
                 .ToList();
 
+            var serviceSession = container.Resolve<IServiceSession>();
+            var registeredConsumer = new List<Type>();
+
             foreach (var consumer in consumerTypes)
             {
-                if (consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(QueueAttribute)))
+                if (consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(QueueAttribute))
+                    || consumer.GetCustomAttributes().Any(x => x.GetType() == typeof(NoQueueAttribute)))
                 {
-                    Console.WriteLine($"Consumer found {consumer.FullName}");
-                    container.RegisterType(consumer);
+                    var attribute = consumer.GetCustomAttributes()
+                                            .OfType<IServiceContext>()
+                                            .FirstOrDefault();
+
+                    var context = attribute.Context;
+
+                    if (context != null && serviceSession.Modules.Any(x => x.Name == context))
+                    {
+                        Console.WriteLine($" Consumer found {consumer.FullName} / {context}");
+                        container.RegisterType(consumer);
+                        registeredConsumer.Add(consumer);
+                    }
+                    else
+                    {
+                        Console.WriteLine($" /Skip consumer found {consumer.FullName} / {context}");
+                    }
                 }
             }
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 cfg.InitializeHost(connectionConfigurationService);
 
-                if (consumerTypes.Any())
+                if (registeredConsumer.Any())
                 {
                     var consumers = new Dictionary<string, Type>();
-                    foreach (var consumerType in consumerTypes)
+                    var queuelessConsumer = new List<Type>();
+
+                    foreach (var consumerType in registeredConsumer)
                     {
                         var attributes = consumerType.GetCustomAttributes(typeof(QueueAttribute), true);
                         if (attributes.Any())
@@ -57,12 +78,21 @@ namespace Simplic.MessageBroker.RabbitMQ
                             var queueName = ((QueueAttribute)attributes[0]).Name;
                             consumers.Add(queueName, consumerType);
                         }
+
+                        attributes = consumerType.GetCustomAttributes(typeof(NoQueueAttribute), true);
+                        if (attributes.Any())
+                            queuelessConsumer.Add(consumerType);
                     }
 
                     Console.WriteLine($"Consumers found: {consumers.Count}");
+                    Console.WriteLine($"Queueless consumers found: {queuelessConsumer.Count}");
 
                     foreach (var consumer in consumers)
                         cfg.ReceiveEndpoint(consumer.Key, ec => ec.Consumer(consumer.Value, x => { return container.Resolve(x); }));
+
+                    // Register event-consumer without the need of having a queue
+                    foreach (var consumer in queuelessConsumer)
+                        cfg.ReceiveEndpoint(ec => ec.Consumer(consumer, x => { return container.Resolve(x); }));
                 }
 
                 var session = sessionService.CurrentSession;
