@@ -18,7 +18,7 @@ pool:
 
 variables:
 - group: simplic-deployment
-- group: simplic-deployment-dev02
+- group: simplic-deployment-dev01
 - name: buildConfiguration
   value: "Release"
 
