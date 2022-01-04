@@ -12,4 +12,7 @@
   <ChangeSet>
     <Change type="feature">Adds the possibility to have queue-less event consumer (New attribute `NoQueue`).</Change>
   </ChangeSet>
+  <ChangeSet>
+    <Change type="enhancement">Remove redis queue-tracking (counting).</Change>
+  </ChangeSet>
 </ReleaseNotes>

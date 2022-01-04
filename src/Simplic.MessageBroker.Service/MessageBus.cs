@@ -35,7 +35,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
-            IncrementMessageChannel();
             bus.Publish<T>(message, cancellationToken);
         }
 
@@ -46,7 +45,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish(object message, CancellationToken cancellationToken = default)
         {
-            IncrementMessageChannel();
             bus.Publish(message, cancellationToken);
         }
 
@@ -58,7 +56,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            IncrementMessageChannel();
             bus.Publish(message, messageType, cancellationToken);
         }
 
@@ -70,7 +67,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Publish<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
-                IncrementMessageChannel();
                 bus.Publish<T>(values, cancellationToken);   
         }
 
@@ -82,7 +78,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send<T>(T message, CancellationToken cancellationToken = default) where T : class
         {
-            IncrementMessageChannel();
             bus.Send<T>(message, cancellationToken);
         }
 
@@ -93,7 +88,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send(object message, CancellationToken cancellationToken = default)
         {
-            IncrementMessageChannel();
             bus.Send(message, cancellationToken);
         }
 
@@ -105,7 +99,6 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send(object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            IncrementMessageChannel();
             bus.Send(message, messageType);
         }
 
@@ -117,26 +110,7 @@ namespace Simplic.MessageBroker
         /// <param name="cancellationToken"></param>
         public void Send<T>(object values, CancellationToken cancellationToken = default) where T : class
         {
-            IncrementMessageChannel();
             bus.Send<T>(values, cancellationToken);
-        }
-
-        /// <summary>
-        /// Publishes a message to a message channel
-        /// </summary>
-        /// <param name="commandBase"></param>
-        private void IncrementMessageChannel()
-        {
-            try
-            {
-                var userId = sessionService.CurrentSession.UserId;
-                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GlobalQueueKey);
-                keyValueStore.StringIncrement(MessageBrokerQueueKeys.GetUserQueueKey(userId));
-            }
-            catch (Exception ex)
-            {
-                Log.LogManagerInstance.Instance.Error("Error while incrementing in message channel db", ex);
-            };
         }
     }
 }
