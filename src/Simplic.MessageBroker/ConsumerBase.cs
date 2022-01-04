@@ -50,17 +50,6 @@ namespace Simplic.MessageBroker
             {
                 Log.LogManagerInstance.Instance.Error($"Error while executing consume in consumer: {this.GetType().Name}", ex);
             }
-
-            try
-            {
-                // Dcrease the task in the global and the user queue
-                keyValueStore.StringDecrement(MessageBrokerQueueKeys.GlobalQueueKey);
-                keyValueStore.StringDecrement(MessageBrokerQueueKeys.GetUserQueueKey(userId));
-            }
-            catch (Exception ex)
-            {
-                Log.LogManagerInstance.Instance.Error("Error while updating in memory db key.", ex);
-            }
         }
 
         /// <summary>
