@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ">
-      <Version>7.0.7</Version>
+      <Version>7.3.1</Version>
     </PackageReference>
     <PackageReference Include="Simplic.InMemoryDB">
       <Version>1.0.221.1225</Version>

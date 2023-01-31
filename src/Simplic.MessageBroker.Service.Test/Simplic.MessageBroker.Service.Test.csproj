@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit">
-      <Version>7.0.7</Version>
+      <Version>8.0.12</Version>
     </PackageReference>
     <PackageReference Include="Moq">
       <Version>4.15.2</Version>
