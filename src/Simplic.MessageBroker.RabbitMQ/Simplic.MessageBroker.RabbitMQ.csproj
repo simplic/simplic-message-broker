@@ -73,7 +73,7 @@
       <Version>2.0.320.41</Version>
     </PackageReference>
     <PackageReference Include="Unity">
-      <Version>5.11.8</Version>
+      <Version>5.11.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
